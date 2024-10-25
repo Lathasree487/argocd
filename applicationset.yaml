@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: env-appset
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: staging
+            repoURL: https://github.com/Arshu200/K8s-Game.git
+          - cluster: production
+            repoURL: https://github.com/Arshu200/K8s-Game.git
+  template:
+    metadata:
+      name: '{{cluster}}-app'
+    spec:
+      project: test
+      source:
+        repoURL: '{{repoURL}}'
+        path: manifests
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{cluster}}'
